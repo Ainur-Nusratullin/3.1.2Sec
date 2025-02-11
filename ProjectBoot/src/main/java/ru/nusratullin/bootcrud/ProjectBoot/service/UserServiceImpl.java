@@ -1,0 +1,109 @@
+package ru.nusratullin.bootcrud.ProjectBoot.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.nusratullin.bootcrud.ProjectBoot.dao.RoleDao;
+import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
+import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
+import ru.nusratullin.bootcrud.ProjectBoot.model.User;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserDao userDao;
+    private final RoleDao roleDao;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void saveUser(String name, String surname, int age, String email, String password, Set<String> roleNames) {
+        User user = new User();
+        user.setName(name);
+        user.setSurname(surname);
+        user.setAge(age);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : roleNames) {
+            Role role = roleDao.findByName(roleName).orElseThrow(() ->
+                    new RuntimeException("Role '" + roleName + "' not found"));
+            roles.add(role);
+        }
+        user.setRoles(roles);
+
+        userDao.save(user);
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public void createUser(String name, String surname, int age, String email, String password, Set<String> roleNames) {
+        saveUser(name, surname, age, email, password, roleNames);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> readAllUser() {
+        return userDao.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> readUserById(Long id) { //  Возвращаем Optional
+        return userDao.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserById(Long id) {
+        userDao.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(Long id, String name, String surname, int age, String password, String email, Set<String> roleNames) {
+        Optional<User> optionalUser = readUserById(id); //  Получаем Optional<User>
+        if (optionalUser.isPresent()) { //  Проверяем, существует ли пользователь
+            User user = optionalUser.get();
+            user.setName(name);
+            user.setSurname(surname);
+            user.setAge(age);
+            user.setEmail(email);
+            if (password != null && !password.isEmpty()) { //  Обновляем пароль, только если он был передан
+                user.setPassword(passwordEncoder.encode(password));
+            }
+            if (roleNames == null || roleNames.isEmpty()) {
+                user.setRoles(user.getRoles());
+            } else {
+                Set<Role> rolesUser = new HashSet<>();
+                for (String role : roleNames) {
+                    Role roles = roleDao.findByName(role).orElseThrow(() ->
+                            new RuntimeException("Role '" + role + "' not found"));
+                    rolesUser.add(roles);
+                }
+                user.setRoles(rolesUser);
+            }
+            userDao.save(user);
+        } else {
+            throw new RuntimeException("User with id " + id + " not found");
+        }
+    }
+}

@@ -39,9 +39,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/", "/login", "/error").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/registration").permitAll()
                         .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/admin/**")).hasAnyRole("ADMIN", "USER")
                         .requestMatchers(antMatcher("/user/**")).hasRole("USER")
                         .anyRequest().authenticated()
                 )
@@ -78,4 +77,5 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

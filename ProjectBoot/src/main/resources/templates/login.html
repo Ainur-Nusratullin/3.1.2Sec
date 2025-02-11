@@ -47,25 +47,25 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            transition: border-color 0.3s ease; /* Add transition for focus state */
+            transition: border-color 0.3s ease;
         }
 
         input[type="text"]:focus,
         input[type="password"]:focus {
-            border-color: #007bff; /* Change border color on focus */
-            outline: none; /* Remove default focus outline */
+            border-color: #007bff;
+            outline: none;
         }
 
         button {
             background-color: #007bff;
             color: white;
-            padding: 12px 20px;  /* Increase padding for better button size */
+            padding: 12px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
-            transition: background-color 0.3s ease; /* Add transition for hover effect */
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -75,13 +75,27 @@
         .error-message {
             color: red;
             margin-bottom: 15px;
-            text-align: center; /* Center the error message */
+            text-align: center;
         }
 
         .form-group:last-child {
-            margin-bottom: 0; /* Remove margin from the last form group */
+            margin-bottom: 0;
         }
 
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -101,6 +115,9 @@
         </div>
         <button type="submit">Login</button>
     </form>
+    <div class="register-link">
+        <a href="/registration">Register</a>
+    </div>
 </div>
 </body>
 </html>
