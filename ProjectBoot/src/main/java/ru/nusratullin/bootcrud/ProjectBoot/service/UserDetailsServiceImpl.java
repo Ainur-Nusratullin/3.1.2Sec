@@ -15,9 +15,10 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserDao userDao;
+    private UserDao userDao;
 
-    public UserDetailsServiceImpl(UserDao userDao) {
+    @Autowired
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 

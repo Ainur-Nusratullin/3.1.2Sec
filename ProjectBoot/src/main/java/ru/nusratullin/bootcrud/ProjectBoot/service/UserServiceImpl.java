@@ -1,6 +1,7 @@
 package ru.nusratullin.bootcrud.ProjectBoot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +18,20 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
-    private final RoleDao roleDao;
-    private final PasswordEncoder passwordEncoder;
+    private  UserDao userDao;
+    private  RoleDao roleDao;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+    @Autowired
+    public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
+    }
+    @Autowired
+    public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -67,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> readUserById(Long id) { //  Возвращаем Optional
+    public Optional<User> readUserById(Long id) {
         return userDao.findById(id);
     }
 
@@ -80,14 +88,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(Long id, String name, String surname, int age, String password, String email, Set<String> roleNames) {
-        Optional<User> optionalUser = readUserById(id); //  Получаем Optional<User>
-        if (optionalUser.isPresent()) { //  Проверяем, существует ли пользователь
+        Optional<User> optionalUser = readUserById(id);
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setName(name);
             user.setSurname(surname);
             user.setAge(age);
             user.setEmail(email);
-            if (password != null && !password.isEmpty()) { //  Обновляем пароль, только если он был передан
+            if (password != null && !password.isEmpty()) {
                 user.setPassword(passwordEncoder.encode(password));
             }
             if (roleNames == null || roleNames.isEmpty()) {
