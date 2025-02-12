@@ -1,8 +1,10 @@
 package ru.nusratullin.bootcrud.ProjectBoot.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.nusratullin.bootcrud.ProjectBoot.dao.RoleDao;
@@ -19,7 +21,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
-    private RoleDao roleDao;
+    private RoleService roleService;
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
@@ -28,8 +30,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Autowired
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @Autowired
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
-            Role role = roleDao.findByName(roleName).orElseThrow(() ->
+            Role role = roleService.findByName(roleName).orElseThrow(() ->
                     new RuntimeException("Роль: " + roleName + "не найдена"));
             roles.add(role);
         }
@@ -106,7 +108,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 Set<Role> rolesUser = new HashSet<>();
                 for (String role : roleNames) {
-                    Role roles = roleDao.findByName(role).orElseThrow(() ->
+                    Role roles = roleService.findByName(role).orElseThrow(() ->
                             new RuntimeException("Роль: " + role + "не найдена"));
                     rolesUser.add(roles);
                 }
