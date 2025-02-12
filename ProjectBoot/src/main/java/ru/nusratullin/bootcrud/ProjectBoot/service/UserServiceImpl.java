@@ -18,24 +18,27 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private  UserDao userDao;
-    private  RoleDao roleDao;
+    private UserDao userDao;
+    private RoleDao roleDao;
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
+
     @Autowired
     public void setRoleDao(RoleDao roleDao) {
         this.roleDao = roleDao;
     }
+
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
+    @Transactional
     public void saveUser(String name, String surname, int age, String email, String password, Set<String> roleNames) {
         User user = new User();
         user.setName(name);
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
             Role role = roleDao.findByName(roleName).orElseThrow(() ->
-                    new RuntimeException("Role '" + roleName + "' not found"));
+                    new RuntimeException("Роль: " + roleName + "не найдена"));
             roles.add(role);
         }
         user.setRoles(roles);
@@ -104,14 +107,14 @@ public class UserServiceImpl implements UserService {
                 Set<Role> rolesUser = new HashSet<>();
                 for (String role : roleNames) {
                     Role roles = roleDao.findByName(role).orElseThrow(() ->
-                            new RuntimeException("Role '" + role + "' not found"));
+                            new RuntimeException("Роль: " + role + "не найдена"));
                     rolesUser.add(roles);
                 }
                 user.setRoles(rolesUser);
             }
             userDao.save(user);
         } else {
-            throw new RuntimeException("User with id " + id + " not found");
+            throw new RuntimeException("Пользователь по id: " + id + "не найден");
         }
     }
 }

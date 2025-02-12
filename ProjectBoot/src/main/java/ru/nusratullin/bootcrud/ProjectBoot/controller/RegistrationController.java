@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Controller
 public class RegistrationController {
+
     private UserService userService;
 
     @Autowired
@@ -22,10 +23,10 @@ public class RegistrationController {
 
     @GetMapping("/registration")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
+        User user = new User();
+        model.addAttribute("user", user);
         return "/registration";
     }
-
 
     @PostMapping("/registration")
     public String registerUser(@RequestParam String name,

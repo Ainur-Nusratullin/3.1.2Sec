@@ -12,15 +12,9 @@ import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private UserService userService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/")
-    public String findUser(@AuthenticationPrincipal User user, Model model) {
+    public String getUser(@AuthenticationPrincipal User user, Model model) {
         User newUser = new User();
         newUser.setId(user.getId());
         newUser.setName(user.getName());

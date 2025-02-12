@@ -30,19 +30,19 @@ public class AdminController {
     }
 
     @GetMapping("/addNewUser")
-    public String addUser(Model model) {
+    public String addNewUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "user-info";
     }
 
     @PostMapping("/saveUser")
-    public String addUser(@RequestParam String name,
-                          @RequestParam String surname,
-                          @RequestParam int age,
-                          @RequestParam String email,
-                          @RequestParam String password,
-                          @RequestParam Set<String> roles) {
+    public String saveUser(@RequestParam String name,
+                           @RequestParam String surname,
+                           @RequestParam int age,
+                           @RequestParam String email,
+                           @RequestParam String password,
+                           @RequestParam Set<String> roles) {
         userService.saveUser(name, surname, age, email, password, roles);
         return "redirect:/admin/";
     }
@@ -72,7 +72,7 @@ public class AdminController {
     }
 
     @GetMapping("/find")
-    public String findUserById(@RequestParam(value = "id", required = false) long id, Model model) {
+    public String getUserById(@RequestParam(value = "id", required = false) Long id, Model model) {
         model.addAttribute("user", userService.readUserById(id));
         return "user";
     }
