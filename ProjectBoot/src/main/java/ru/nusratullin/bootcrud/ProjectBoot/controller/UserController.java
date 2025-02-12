@@ -13,16 +13,16 @@ import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 @RequestMapping("/user")
 public class UserController {
 
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/")
     public String getUser(@AuthenticationPrincipal User user, Model model) {
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setName(user.getName());
-        newUser.setSurname(user.getSurname());
-        newUser.setAge(user.getAge());
-        newUser.setEmail(user.getEmail());
-        newUser.setRoles(user.getRoles());
-        model.addAttribute("allUser", newUser);
+        model.addAttribute("allUser", userService.getUserHome(user));
         return "home";
     }
 }

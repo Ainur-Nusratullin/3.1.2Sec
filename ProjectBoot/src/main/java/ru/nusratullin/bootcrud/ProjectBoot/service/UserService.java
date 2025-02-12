@@ -22,5 +22,7 @@ public interface UserService {
     void updateUser(Long id, String name, String surname, int age, String email, String password, Set<String> roleNames);
 
     void deleteUserById(Long id);
+
+     User getUserHome(User user);
 }
 

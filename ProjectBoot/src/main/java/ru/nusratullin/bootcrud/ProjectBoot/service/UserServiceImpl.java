@@ -119,4 +119,17 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Пользователь по id: " + id + "не найден");
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserHome(User user) {
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setName(user.getName());
+        newUser.setSurname(user.getSurname());
+        newUser.setAge(user.getAge());
+        newUser.setEmail(user.getEmail());
+        newUser.setRoles(user.getRoles());
+        return newUser;
+    }
 }
