@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, String name, String surname, int age, String password, String email, Set<String> roleNames) {
+    public void updateUser(Long id, String name, String surname, int age, String email, String password, Set<String> roleNames) {
         Optional<User> optionalUser = readUserById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
