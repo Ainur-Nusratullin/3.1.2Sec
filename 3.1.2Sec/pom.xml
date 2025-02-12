@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.nusratullin.bootcrud</groupId>
-	<artifactId>ProjectBoot</artifactId>
+	<artifactId>2Sec</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ProjectBoot</name>
 	<description>Demo project for Spring Boot</description>
